@@ -125,7 +125,7 @@ function expose(class, fn, s)
             return false 
         end
         return true
-        --Strange but on my machine on fleur worked as a string. I actually stole it from
+        --Strange but on my machine only fleur worked as a string. I actually stole it from
         --https://github.com/Elv13/awesome-configs/blob/master/widgets/layout/desktopLayout.lua#L175
     end,"fleur")
 end
