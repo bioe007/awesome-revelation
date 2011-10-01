@@ -17,6 +17,7 @@ local capi = {
     tag = tag,
     client = client,
     keygrabber = keygrabber,
+    mousegrabber = mousegrabber,
     mouse = mouse,
     screen = screen
 }
@@ -112,9 +113,21 @@ function expose(class, fn, s)
         awful.tag.viewonly(t)
 
         capi.keygrabber.stop()
+        capi.mousegrabber.stop()
     end
 
     capi.keygrabber.run(keyboardhandler(restore))
+
+    capi.mousegrabber.run(function(mouse)
+        if mouse.buttons[1] == true then 
+            local c = awful.mouse.client_under_pointer()
+            selectfn(restore)(c)
+            return false 
+        end
+        return true
+        --Strange but on my machine on fleur worked as a string. I actually stole it from
+        --https://github.com/Elv13/awesome-configs/blob/master/widgets/layout/desktopLayout.lua#L175
+    end,"fleur")
 end
 
 setmetatable(_M, { __call = function(_, ...) return expose(...) end })
