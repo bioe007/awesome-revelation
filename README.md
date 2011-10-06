@@ -20,8 +20,8 @@ Provides Mac OSX like 'Expose' view of all clients.
  4. Reload rc.lua and try the keybinding.
 
  It should bring all clients to the current tag and set the layout to fair. You
- can focus clients with __cursor__ or __hjkl__ keys then press __Enter__ to
- select or __Escape__ to abort.
+ can focus clients with __cursor__ or __hjkl__ keys then press __Enter__ or press
+ the mouse right button to select or __Escape__ to abort.
 
  This is a modification of the original awesome library that implemented
  expose like behavior.
