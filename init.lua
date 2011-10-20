@@ -10,6 +10,7 @@
 --
 
 local awful = awful
+local aw_rules = require('awful.rules')
 local pairs = pairs
 local setmetatable = setmetatable
 local table = table
@@ -24,25 +25,20 @@ local capi = {
 
 module("revelation")
 
--- FIXME: Now unused filter to grab clients based on their class.
---
--- @param class the class string to find
--- @s the screen
---
-function clients(class, s)
-    local clients
-    if class then
-        clients = {}
-        for k, c in pairs(capi.client.get(s)) do
-            if c.class == class then
-                table.insert(clients, c)
-            end
-        end
-    else
-        clients = capi.client.get(s)
-    end
-    return clients
-end
+config = {
+    -- Name of expose tag.
+    tag_name = "Revelation",
+
+    -- Match function can be defined by user.
+    -- Must accept a `rule` and `client` and return `boolean`.
+    -- The rule forms follow `awful.rules` syntax except we also check the
+    -- special `rule.any` key. If its true, then we use the `match.any` function
+    -- for comparison.
+    match = {
+        exact = aw_rules.match,
+        any   = aw_rules.match_any
+    },
+}
 
 -- Executed when user selects a client from expose view.
 --
@@ -56,6 +52,21 @@ function selectfn(restore)
         capi.client.focus = c
         c:raise()
     end
+end
+
+-- Tags all matching clients with tag t
+-- @param rule The rule. Conforms to awful.rules syntax.
+-- @param clients A table of clients to check.
+-- @param t The tag to give matching clients.
+function match_clients(rule, clients, t)
+    local mf = rule.any and config.match.any or config.match.exact
+    for _, c in pairs(clients) do
+        if mf(c, rule) then
+            awful.client.toggletag(t, c)
+            c.minimized = false
+        end
+    end
+    return clients
 end
 
 -- Arrow keys and 'hjkl' move focus, Return selects, Escape cancels. Ignores
@@ -96,22 +107,20 @@ end
 
 -- Implement Exposé (ala Mac OS X).
 --
--- @param class The class of clients to expose, or nil for all clients.
--- @param fn A binary function f(t, n) to set the layout for tag t for n
---           clients, or nil for the default layout.
--- @param s The screen to consider clients of, or nil for "current screen".
-function expose(class, fn, s)
+-- @param rule A table with key and value to match. [{class=""}]
+-- @param s The screen to consider clients of. [mouse.screen].
+function expose(rule, s)
+    local rule = rule or {class=""}
     local scr = s or capi.mouse.screen
-    local t = capi.screen[scr]:tags()[1]
-    local oldlayout = awful.tag.getproperty( t, "layout" )
 
-    awful.tag.viewmore( capi.screen[scr]:tags(), t.screen )
-    awful.layout.set(awful.layout.suit.fair,t)
-
+    local t = awful.tag.new({config.tag_name},
+                            scr,
+                            awful.layout.suit.fair)[1]
+    awful.tag.viewonly(t, t.screen)
+    match_clients(rule, capi.client.get(scr), t)
     local function restore()
-        awful.layout.set(oldlayout,t)
-        awful.tag.viewonly(t)
-
+        awful.tag.history.restore()
+        t.screen = nil
         capi.keygrabber.stop()
         capi.mousegrabber.stop()
     end
@@ -119,13 +128,14 @@ function expose(class, fn, s)
     capi.keygrabber.run(keyboardhandler(restore))
 
     capi.mousegrabber.run(function(mouse)
-        if mouse.buttons[1] == true then 
+        if mouse.buttons[1] == true then
             local c = awful.mouse.client_under_pointer()
             selectfn(restore)(c)
-            return false 
+            return false
         end
         return true
-        --Strange but on my machine only fleur worked as a string. I actually stole it from
+        --Strange but on my machine only fleur worked as a string.
+        --stole it from
         --https://github.com/Elv13/awesome-configs/blob/master/widgets/layout/desktopLayout.lua#L175
     end,"fleur")
 end
