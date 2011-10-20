@@ -3,6 +3,8 @@
 Provides Mac OSX like 'Expose' view of all clients.
 
 ## Use
+
+### Installation
  (From user's awesome configuration directory, usually ~/.config/awesome)
 
  1. Clone repository:
@@ -25,6 +27,43 @@ Provides Mac OSX like 'Expose' view of all clients.
 
  This is a modification of the original awesome library that implemented
  expose like behavior.
+
+### Configuration
+ Revelation's configuration is done through direct access to the module's
+ `config` table.
+
+ There are two basic settings, shown with default values:
+
+    -- The name of the tag created for the 'exposed' view
+    revelation.config.tag_name = 'Revelation'
+
+    -- A table of matcher functions (used in client filtering)
+    revelation.match.exact = awful.rules.match
+    revelation.match.any   = awful.rules.match_any
+
+ The rule matching functions must conform to `awful.rules.match` prototypes.
+
+ For client matching rules, we follow the same syntax as awful.rules with one
+ perk; if `rule.any == true`, then we call the `config.match.any` function.
+
+### Examples
+ All clients:
+
+     awful.key({modkey}, "e", revelation)
+
+ To match all urxvt terminals:
+
+     awful.key({modkey}, "e", function()
+                revelation({class="URxvt"})
+             end)
+ To match clients with class 'foo' or 'bar':
+
+     awful.key({modkey}, "e", function()
+                revelation({
+                            class={"foo", "bar"},
+                            any=true
+                            })
+            end)
 
 ## Credits
 
