@@ -9,7 +9,7 @@
 -- @copyright 2008 Espen Wiborg, Julien Danjou
 --
 
-local awful = awful
+local awful = require('awful')
 local aw_rules = require('awful.rules')
 local pairs = pairs
 local setmetatable = setmetatable
