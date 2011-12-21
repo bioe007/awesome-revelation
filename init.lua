@@ -127,12 +127,21 @@ function expose(rule, s)
 
     capi.keygrabber.run(keyboardhandler(restore))
 
+    
+    local pressedMiddle = false
     capi.mousegrabber.run(function(mouse)
+        local c = awful.mouse.client_under_pointer()
         if mouse.buttons[1] == true then
-            local c = awful.mouse.client_under_pointer()
             selectfn(restore)(c)
             return false
+        elseif mouse.buttons[2] == true and pressedMiddle == false and c ~= nil then -- is true whenever the button is down. 
+            pressedMiddle = true -- extra variable needed to prevent script from spam-closing windows
+            c:kill()
+            return true
+        elseif mouse.buttons[2] == false and pressedMiddle == true then
+            pressedMiddle = false
         end
+
         return true
         --Strange but on my machine only fleur worked as a string.
         --stole it from
