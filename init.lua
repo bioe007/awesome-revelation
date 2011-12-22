@@ -64,7 +64,11 @@ function match_clients(rule, clients, t)
     local mf = rule.any and config.match.any or config.match.exact
     for _, c in pairs(clients) do
         if mf(c, rule) then
-            clientData[c] = c:geometry() -- Store geometry before setting their tags
+            -- Store geometry before setting their tags
+            if awful.client.floating.get(c) then
+                clientData[c] = c:geometry()
+                awful.client.floating.set(c, false)
+            end
 
             awful.client.toggletag(t, c)
             c.minimized = false
@@ -131,6 +135,7 @@ function expose(rule, s)
         for _, c in pairs(capi.client.get(src)) do
             if clientData[c] then
                 c:geometry(clientData[c]) -- Restore positions and sizes
+                awful.client.floating.set(c, true)
             end
         end
     end
