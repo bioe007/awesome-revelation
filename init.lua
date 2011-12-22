@@ -23,6 +23,8 @@ local capi = {
     screen = screen
 }
 
+local clientData = {} -- table that holds the positions and sizes of floating clients
+
 module("revelation")
 
 config = {
@@ -62,6 +64,8 @@ function match_clients(rule, clients, t)
     local mf = rule.any and config.match.any or config.match.exact
     for _, c in pairs(clients) do
         if mf(c, rule) then
+            clientData[c] = c:geometry() -- Store geometry before setting their tags
+
             awful.client.toggletag(t, c)
             c.minimized = false
         end
@@ -123,6 +127,12 @@ function expose(rule, s)
         t.screen = nil
         capi.keygrabber.stop()
         capi.mousegrabber.stop()
+
+        for _, c in pairs(capi.client.get(src)) do
+            if clientData[c] then
+                c:geometry(clientData[c]) -- Restore positions and sizes
+            end
+        end
     end
 
     capi.keygrabber.run(keyboardhandler(restore))
