@@ -23,6 +23,8 @@ local capi = {
     screen = screen
 }
 
+local clientData = {} -- table that holds the positions and sizes of floating clients
+
 module("revelation")
 
 config = {
@@ -62,6 +64,8 @@ function match_clients(rule, clients, t)
     local mf = rule.any and config.match.any or config.match.exact
     for _, c in pairs(clients) do
         if mf(c, rule) then
+            clientData[c] = c:geometry() -- Store geometry before setting their tags
+
             awful.client.toggletag(t, c)
             c.minimized = false
         end
@@ -123,16 +127,31 @@ function expose(rule, s)
         t.screen = nil
         capi.keygrabber.stop()
         capi.mousegrabber.stop()
+
+        for _, c in pairs(capi.client.get(src)) do
+            if clientData[c] then
+                c:geometry(clientData[c]) -- Restore positions and sizes
+            end
+        end
     end
 
     capi.keygrabber.run(keyboardhandler(restore))
 
+    
+    local pressedMiddle = false
     capi.mousegrabber.run(function(mouse)
+        local c = awful.mouse.client_under_pointer()
         if mouse.buttons[1] == true then
-            local c = awful.mouse.client_under_pointer()
             selectfn(restore)(c)
             return false
+        elseif mouse.buttons[2] == true and pressedMiddle == false and c ~= nil then -- is true whenever the button is down. 
+            pressedMiddle = true -- extra variable needed to prevent script from spam-closing windows
+            c:kill()
+            return true
+        elseif mouse.buttons[2] == false and pressedMiddle == true then
+            pressedMiddle = false
         end
+
         return true
         --Strange but on my machine only fleur worked as a string.
         --stole it from
