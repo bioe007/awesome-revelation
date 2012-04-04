@@ -9,28 +9,28 @@ Provides Mac OSX like 'Expose' view of all clients.
 
  1. Clone repository:
 
-        git clone https://bioe007@github.com/bioe007/awesome-revelation.git
+        git clone https://github.com/bioe007/awesome-revelation.git
 
- 2. put near the top of your rc.lua require("revelation")
+ 2. put near the top of your rc.lua `require("revelation")`
+
  3. Make a global keybinding (ModKey + e) for revelation in your rc.lua:
 
-    globalkeys = awful.util.table.join(
-    awful.key({ modkey,           }, "Left",   awful.tag.viewprev       ), 
-    awful.key({ modkey,           }, "Right",  awful.tag.viewnext       ),
-    awful.key({ modkey,           }, "Escape", awful.tag.history.restore),
-    awful.key({ modkey}, "e", revelation),  -- Insert this line
+        globalkeys = awful.util.table.join(
+        awful.key({ modkey,           }, "Left",   awful.tag.viewprev       ), 
+        awful.key({ modkey,           }, "Right",  awful.tag.viewnext       ),
+        awful.key({ modkey,           }, "Escape", awful.tag.history.restore),
+        awful.key({ modkey}, "e", revelation),  -- Insert this line
 
-    awful.key({ modkey,           }, "j",
-    function ()
-        awful.client.focus.byidx( 1)
-        if client.focus then client.focus:raise() end
-    end),
-
+        awful.key({ modkey,           }, "j",
+        function ()
+            awful.client.focus.byidx( 1)
+            if client.focus then client.focus:raise() end
+        end),
 
     **NOTE:** Always double check this key binding syntax against the version of
     Awesome that you are using.
 
- 4. Reload rc.lua and try the keybinding (Press Modkey + e).
+ 4. Reload rc.lua and try the keybinding __Modkey + e__
 
  It should bring all clients to the current tag and set the layout to fair. You
  can focus clients with __cursor__ or __hjkl__ keys then press __Enter__ or
