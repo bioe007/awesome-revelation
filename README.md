@@ -78,4 +78,6 @@ Provides Mac OSX like 'Expose' view of all clients.
     * Julien Danjou <julien@danjou.info>
 
 ## License
- (c) 2008 Espen Wiborg, Julien Danjou
+    Revelation is released under the GNU General Public License, version 3.
+    (c) 2009-12 Perry Hargrave
+    (c) 2008 Espen Wiborg, Julien Danjou
