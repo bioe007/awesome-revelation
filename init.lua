@@ -128,7 +128,8 @@ function expose(rule, s)
     match_clients(rule, capi.client.get(scr), t)
     local function restore()
         awful.tag.history.restore()
-        t.screen = nil
+	awful.tag.setscreen(t, nil)
+        t.selected = false
         capi.keygrabber.stop()
         capi.mousegrabber.stop()
 
