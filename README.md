@@ -1,3 +1,8 @@
+# Archive notice
+repository is archived status. Some emails removed to minimize annoyance spam.
+
+Author no longer using github so no follow-ups from here.
+
 # revelation.lua
 
 Provides Mac OSX like 'Expose' view of all clients.
@@ -16,7 +21,7 @@ Provides Mac OSX like 'Expose' view of all clients.
  3. Make a global keybinding (ModKey + e) for revelation in your rc.lua:
 
         globalkeys = awful.util.table.join(
-        awful.key({ modkey,           }, "Left",   awful.tag.viewprev       ), 
+        awful.key({ modkey,           }, "Left",   awful.tag.viewprev       ),
         awful.key({ modkey,           }, "Right",  awful.tag.viewnext       ),
         awful.key({ modkey,           }, "Escape", awful.tag.history.restore),
         awful.key({ modkey}, "e", revelation),  -- Insert this line
@@ -79,7 +84,7 @@ Provides Mac OSX like 'Expose' view of all clients.
 ## Credits
 
 ### Maintenance
-    * Perry Hargrave <resixian@gmail.com>
+    * ...
 
 ### Contributions, many thanks!
     * Nikola Petrov <nikolavp@gmail.com>
