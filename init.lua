@@ -24,6 +24,7 @@ local capi = {
 }
 
 local clientData = {} -- table that holds the positions and sizes of floating clients
+local t = false;
 
 module("revelation")
 
@@ -104,6 +105,7 @@ function keyboardhandler (restore)
             return false
         elseif key == "Return" then
             selectfn(restore)(capi.client.focus)
+            awful.tag.delete(t)
             return false
         elseif key == "Left" or key == "Right" or
             key == "Up" or key == "Down" then
@@ -121,7 +123,7 @@ function expose(rule, s)
     local rule = rule or {class=""}
     local scr = s or capi.mouse.screen
 
-    local t = awful.tag.new({config.tag_name},
+    t = awful.tag.new({config.tag_name},
                             scr,
                             awful.layout.suit.fair)[1]
     awful.tag.viewonly(t, t.screen)
